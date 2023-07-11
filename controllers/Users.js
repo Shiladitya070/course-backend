@@ -51,14 +51,17 @@ const Register = asyncWrapper(async (req, res) => {
     created_at: new Date().toISOString(),
   });
   const addedUser = await newUser.save();
-  return res.status(200).json(addedUser);
+  const token = gerenateToken(addedUser);
+  return res.status(200).json({ token });
 });
 const userProfile = async (req, res) => {
-  const { id, username, email, avatar, created_at } = await User.findById(
+  // console.log(req.user.id);
+  const allUser = await User.find({});
+  const { _id, username, email, created_at, avatar } = await User.findById(
     req.user.id
   );
-
-  res.status(200).json({ id, username, email, avatar, created_at });
+  console.log(allUser);
+  return res.status(200).json({ id: _id, username, email, created_at, avatar });
 };
 
 module.exports = {
